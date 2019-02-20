@@ -38,14 +38,16 @@ class HomeScreen extends Component {
       .then(response => response.json())
       .then(responseData => {
         console.log(responseData)
-        this.setState = {
+        this.setState ( {
           data: this.state.data.concat(responseData.movies),
           isLoad :true
-        }
+        });
       });
   }
 
   
+
+
   render() {
     var movie = MOCKED_MOVIES_DATA[0];
     console.log("render------------")
