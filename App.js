@@ -15,9 +15,9 @@ var MOCKED_MOVIES_DATA = [
     posters: { thumbnail: "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1550644156036&di=67009bbae15f23613cb3f42550539b78&imgtype=0&src=http%3A%2F%2Fimg.mp.sohu.com%2Fupload%2F20170815%2Fc31de52066b745e49c1e789a92148798_th.png" }
   }
 ];
-// var REQUEST_URL = "https://api.douban.com/v2/book/1220562"
-var REQUEST_URL =
-  "https://raw.githubusercontent.com/facebook/react-native/0.51-stable/docs/MoviesExample.json";
+var REQUEST_URL = "https://api.douban.com/v2/movie/in_theaters"
+// var REQUEST_URL =
+//   "https://raw.githubusercontent.com/facebook/react-native/0.51-stable/docs/MoviesExample.json";
 
 
 class HomeScreen extends Component {
@@ -38,24 +38,25 @@ class HomeScreen extends Component {
       .then(response => response.json())
       .then(responseData => {
         console.log(responseData)
-        this.setState ( {
-          data: this.state.data.concat(responseData.movies),
-          isLoad :true
+        this.setState({
+          data: this.state.data.concat(responseData.subjects),
+          isLoad: true
         });
       });
   }
 
-  
+
 
 
   render() {
     var movie = MOCKED_MOVIES_DATA[0];
     console.log("render------------")
-    if(!this.state.isLoad){
+    if (!this.state.isLoad) {
       return this.loadingView();
     }
+    var movie = this.state.data[0];
     return (
-      <View style={{ alignItems: 'center' }}>
+      <View >
         <Text>Home Screen</Text>
         <Button
           title="Go to Details "
@@ -63,47 +64,63 @@ class HomeScreen extends Component {
             this.props.navigation.navigate('Movies')
             console.log(TAG, "test===============");
           }
-
           }
         />
         <FlatList
-          data={[
-            { key: '发送到健康福建省的3' },
-            { key: '个胜多负少的' },
-            { key: '颗粒剂拉的屎' },
-            { key: '是牛市口拉大' },
-            { key: '324223' },
-            { key: '发送到健康福建省的2' },
-            { key: '532认为沃尔夫' },
-            { key: '发送到健康福建省的1' },
-            { key: '发生大幅度' },
-            { key: '金卡理论上' },
-          ]}
-          renderItem={({ item }) => <Text>{item.key}</Text>}
-
+          data = {this.state.data}
+          renderItem = {this.renderMoviewItem}
+          keyExtractor = {item => item.id}
+          style= {styles.listStyle}
+          ItemSeparatorComponent={this.renderSeparator}
         />
-        <View style={styles.rootContainer}>
-
-          <Image source={{ uri: movie.posters.thumbnail }} style={styles.item}></Image>
-          <View style={styles.rightContainer}>
-            <Text style={styles.textStyle}>{movie.title}</Text>
-            <Text style={styles.textStyle}>{movie.year}</Text>
-          </View>
-        </View>
-
       </View>
     )
+
   }
 
-  loadingView(){
+  loadingView() {
     return (
-      <View style = {{flex:1 , alignItems:'center' ,justifyContent: 'center'}}>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>数据加载中...</Text>
       </View>
     );
-  };
+  }
+
+  // renderMovieView(movie) {
+  //   return (
+  //     <View style={styles.rootContainer}>
+  //       <Image source={{ uri: movie.posters.thumbnail }} style={styles.item}></Image>
+  //       <View style={styles.rightContainer}>
+  //         <Text style={styles.textStyle}>{movie.title}</Text>
+  //         <Text style={styles.textStyle}>{movie.year}</Text>
+  //       </View>
+  //     </View>)
+  // }
+  // <Image source={{ uri: item.images.medium }} style={styles.item}></Image>
+  renderMoviewItem({item}) {
+    return (
+        <View style={styles.rootContainer}>
+        <Image source={require('./img/wujing.png')} style={styles.item}></Image>
+        <View style={styles.rightContainer}>
+          <Text style={styles.textStyle}>{item.title}</Text>
+          <Text style={styles.textStyle}>{item.year}</Text>
+        </View>
+      </View>)
+  }
 }
 
+renderSeparator = () => {
+  return (
+      <View
+      style={{
+      height: 1,
+      width: "86%",
+      backgroundColor: "red",
+      marginLeft: "14%"
+      }}
+      />
+  );
+};
 
 const styles = StyleSheet.create({
   item: {
@@ -116,6 +133,9 @@ const styles = StyleSheet.create({
   rootContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    marginLeft: 15,
+    marginBottom:  10,
+    marginRight:  15,
   },
   rightContainer: {
     flex: 1,
@@ -128,6 +148,9 @@ const styles = StyleSheet.create({
     marginTop: 10,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  listStyle:{
+    
   }
 })
 
